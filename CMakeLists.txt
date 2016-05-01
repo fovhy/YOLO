@@ -1,7 +1,7 @@
 project(yolo)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 cmake_minimum_required(VERSION 2.8)
-FILE(GLOB SRC_LIST ./source/* )
+FILE(GLOB SRC_LIST ./source/* ./shader/*)
 INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS})
 add_executable(${PROJECT_NAME} ${SRC_LIST} )
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} GLEW GL GLU glut glui SDL2)
