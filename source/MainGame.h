@@ -5,7 +5,11 @@
 #include <GL/freeglut.h>
 #include <string>
 #include <iostream>
+#include <vector>
 #include "GLSLProgram.h"
+#include "GLTexture.h"
+#include "ImageLoader.h"
+#include "Camera.h"
 
 enum class GameState {PLAY, EXIT};
 class MainGame{
@@ -16,6 +20,7 @@ public:
     void run();
 
 
+
 private:
     SDL_Window* window;
     int screenWidth = 1024;
@@ -23,13 +28,20 @@ private:
     float time = 0;
     GameState gameState;
 
+    Camera camera;
+    float fps;
+    float frameTime;
+    float maxfps = 60.0f;
+    //GLTexture playerTexture;
+
     void initSystems();
     void gameLoop();
     void processInput();
     void drawGame();
     void initShaders();
+    void calculateFPS();
 
-    Sprite sprite;
+    std::vector<Sprite*> sprites;
 
     GLSLProgram colorProgram;
 
