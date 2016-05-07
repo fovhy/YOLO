@@ -7,9 +7,9 @@
 class ResourceManager{
 public:
 
-    static GLTexture getTexture(std::string texturePath);
+    GLTexture getTexture(std::string texturePath);
 
 private:
-    static TextureCache textureCache;
+     TextureCache textureCache;
 
 };

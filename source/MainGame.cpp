@@ -15,10 +15,6 @@ MainGame::~MainGame(){
 
 void MainGame::run(){
     initSystems();
-    sprites.push_back(new Sprite());
-    sprites.back()->init(0.0f, 0.0f, screenWidth/2, screenWidth/2, "../YOLO/texture/JJU/PNG/CharacterRight_Standing.png" );
-    sprites.push_back(new Sprite());
-    sprites.back()->init(screenWidth/2, 0.0f, screenWidth/2 ,screenWidth/2, "../YOLO/texture/JJU/PNG/CharacterRight_Standing.png" );
 
     //playerTexture = ImageLoader::loadPNG("../YOLO/texture/JJU/PNG/CharacterRight_Standing.png");
 
@@ -41,9 +37,14 @@ void MainGame::initSystems() {
         printError("Failed to initialize glew");
     }
 
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
 
     initShaders();
+    spriteBatch_.init();
+    myStage.init();
+
 }
 
 void MainGame::gameLoop(){
@@ -114,8 +115,8 @@ void MainGame::drawGame(){
 
     glUniform1i(textureLocation, 0);
 
-    GLuint timeLocation = colorProgram.getUniformLocation("time");
-    glUniform1f(timeLocation, time);
+   // GLuint timeLocation = colorProgram.getUniformLocation("time");
+    //glUniform1f(timeLocation, time);
 
     GLuint pLocation = colorProgram.getUniformLocation("ortho");
     glm::mat4 cameraMatrix = camera.getCameraMatrix();
@@ -123,10 +124,28 @@ void MainGame::drawGame(){
     glUniformMatrix4fv(pLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
 
 
-    // draw all sprites
-    for(auto i : sprites){
-        i->draw();
-    }
+
+
+    myStage.setStage(spriteBatch_);
+
+    spriteBatch_.begin();
+    glm::vec4 pos(1000, 0, 50, 50);
+    glm::vec4 uv(0, 0, 1, 1);
+    glm::vec4 pos2(100, 220, 500, 500);
+    glm::vec4 uv2(0, 0, 1, 1);
+    static GLTexture texture2 = mainManager.getTexture("../YOLO/texture/JJU/PNG/HappyCloud.png");
+    static GLTexture texture = mainManager.getTexture("../YOLO/texture/JJU/PNG/CharacterRight_Standing.png");
+    Color color;
+    color.r = 255;
+    color.b = 255;
+    color.g = 255;
+    color.a = 255;
+    spriteBatch_.draw(pos, uv, texture.id, 0.0f, color);
+    //spriteBatch_.draw(pos2, uv2, texture2.id, 0.0f, color);
+
+    spriteBatch_.end();
+
+    spriteBatch_.renderBatches();
 
 
     glBindTexture(GL_TEXTURE_2D, 0);

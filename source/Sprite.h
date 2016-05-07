@@ -20,4 +20,6 @@ private:
     float height;
     GLTexture texture;
     GLuint vboID = 0;
+    ResourceManager spriteManager;
+
 };
