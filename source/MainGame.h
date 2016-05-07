@@ -1,5 +1,6 @@
 #pragma once
 #include "Stage.h"
+#include "inputManager.h"
 enum class GameState {PLAY, EXIT};
 class MainGame{
 public:
@@ -12,8 +13,8 @@ public:
 
 private:
     SDL_Window* window;
-    int screenWidth = 1024;
-    int screenHeight = 768;
+    int screenWidth = 1200;
+    int screenHeight = 800;
     float time = 0;
     GameState gameState;
     ResourceManager mainManager;
@@ -32,6 +33,8 @@ private:
     void drawGame();
     void initShaders();
     void calculateFPS();
+
+    inputManager inputManager_;
 
     SpriteBatch spriteBatch_;
     GLSLProgram colorProgram;

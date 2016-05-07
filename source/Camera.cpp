@@ -1,7 +1,7 @@
 #include "Camera.h"
 #include <iostream>
 
-Camera::Camera() : position(1.0f, 1.0f), cameraMatrix(1.0f), orthoMatrix(1.0f), scale(1.0f), updateRequried(false){
+Camera::Camera() : position(0.0f, 0.0f), cameraMatrix(1.0f), orthoMatrix(1.0f), scale(1.0f), updateRequried(false){
 
 }
 
@@ -12,6 +12,8 @@ void Camera::init(int screenWidth, int screenHeight){
     this->screenWidth = screenWidth;
     this->screenHeight = screenHeight;
     orthoMatrix = glm::ortho(0.0f, float(screenWidth), 0.0f, float(screenHeight));
+    glm::vec3 translate(-position.x, -position.y + screenHeight/2, 0.0f);
+    cameraMatrix = glm::translate(orthoMatrix, translate);
 }
 
 void Camera::update(){

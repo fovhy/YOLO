@@ -58,7 +58,7 @@ private:
     }
 
     static bool compareTexture(Glyph* a, Glyph* b){
-        return (a->texture < b-> texture);
+        return (a->texture > b-> texture);
     }
 
     void createVertexArray();

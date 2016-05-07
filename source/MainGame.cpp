@@ -3,7 +3,6 @@
 MainGame::MainGame::MainGame(){
     window = nullptr;
     gameState = GameState::PLAY;
-    camera.init(screenWidth, screenHeight);
 
 }
 
@@ -42,6 +41,7 @@ void MainGame::initSystems() {
     glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
 
     initShaders();
+    camera.init(screenWidth, screenHeight);
     spriteBatch_.init();
     myStage.init();
 
@@ -60,7 +60,7 @@ void MainGame::gameLoop(){
             frameCounter = 0;
         }
         drawGame();
-
+// limit fps to be 60
         float frameTicks = SDL_GetTicks() - startTicks;
         if(1000.0/ maxfps > frameTicks){
             SDL_Delay(1000.0F/ maxfps - frameTicks);
@@ -71,7 +71,7 @@ void MainGame::gameLoop(){
 void MainGame::processInput(){
     SDL_Event evnt;
 
-    const float CAMERA_SPEED = 20.0f;
+    const float CAMERA_SPEED = 2.0f;
 
     while(SDL_PollEvent(&evnt)){
         switch(evnt.type){
@@ -82,23 +82,18 @@ void MainGame::processInput(){
             //std::cout<<evnt.motion.x << " " << evnt.motion.y << std::endl;
             break;
         case SDL_KEYDOWN:
-            switch(evnt.key.keysym.sym){
-            case SDLK_w:
-                    camera.setPosition(camera.getPosition() + glm::vec2(0.0, -CAMERA_SPEED));
-                    break;
-            case SDLK_s:
-                    camera.setPosition(camera.getPosition() + glm::vec2(0.0, CAMERA_SPEED));
-                    break;
-            case SDLK_a: camera.setPosition(camera.getPosition() + glm::vec2(CAMERA_SPEED, 0.0));
-                    break;
-            case SDLK_d:
-                    camera.setPosition(camera.getPosition() + glm::vec2(-CAMERA_SPEED, 0.0));
-                    break;
-            }
-            camera.update();
+            inputManager_.pressKey(evnt.key.keysym.sym);
+            break;
+        case SDL_KEYUP:
+            inputManager_.releaseKey(evnt.key.keysym.sym);
             break;
         }
     }
+
+    if(inputManager_.isKeyPressed(SDLK_s)){
+        camera.setPosition(camera.getPosition() + glm::vec2(0.0f, CAMERA_SPEED));
+    }
+    camera.update();
 }
 
 void MainGame::drawGame(){
@@ -115,7 +110,7 @@ void MainGame::drawGame(){
 
     glUniform1i(textureLocation, 0);
 
-   // GLuint timeLocation = colorProgram.getUniformLocation("time");
+    // GLuint timeLocation = colorProgram.getUniformLocation("time");
     //glUniform1f(timeLocation, time);
 
     GLuint pLocation = colorProgram.getUniformLocation("ortho");

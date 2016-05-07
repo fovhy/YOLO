@@ -13,12 +13,7 @@
 #include "spriteBatch.h"
 #include "fileManager.h"
 #include "ResourceManager.h"
-enum tiles{
-    GRASS,
-    ICE,
-    DIRT,
-    POISON
-};
+#include "tile.h"
 
 class Stage{
 public:
@@ -27,18 +22,23 @@ public:
     void init();
     void setStage(SpriteBatch &);
 private:
-    tiles grass = GRASS;
-    tiles ice = ICE;
-    tiles dirt = DIRT;
-    tiles poison = POISON;
     GLTexture grassTexture;
     GLTexture iceTexture;
     GLTexture dirtTexture;
     GLTexture poisonTexture;
     GLTexture backGroundTexture;
 
+    std::vector<tile> firstLevel;
+    std::vector<tile> secondLevel;
+    std::vector<tile> thirdLevel;
+    std::vector<tile> fourthLevel;
+
+    int tileWidth = 100;
+    int tileHeight = 30;
+
     glm::vec4 getTilesLeftRight(const glm::vec4& pos, int);
     glm::vec4 getTilesUpDown(const glm::vec4& pos, int);
+    void drawTiles(const std::vector<tile>& level, SpriteBatch& spriteBatch);
     ResourceManager stageManager;
 
 
