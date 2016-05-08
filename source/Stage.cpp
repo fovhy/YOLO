@@ -12,10 +12,34 @@ void Stage::init(){
     poisonTexture = stageManager.getTexture("../YOLO/texture/JJU/PNG/LandPiece_DarkPing.png");
     backGroundTexture = stageManager.getTexture("../YOLO/texture/JJU/PNG/Backgrounds/background.png");
 
+    players.resize(PLAYER_NUMBERS);
+    players[0].init(glm::vec2(0, 100));
+    players[0].setCurrentCharacters(&players[0].characters[0]);
+    players[0].setPlayerType(PLAYER_ONE);
+    players[0].setPayerState(STANDING);
+    //TDOO ADD PLAYER 2
+    //players_[1].init();
+    //players_[1].setCurrentCharacters(& players_[1].characters[1]);
+
     firstLevel.resize(12);
     secondLevel.resize(12);
     thirdLevel.resize(12);
     fourthLevel.resize(12);
+}
+
+void Stage::update(){
+    for(auto &aPlayer : players){
+        aPlayer.processInput();
+        aPlayer.update();
+    }
+    tileCollisionChecking();
+    applyGravity();
+}
+
+void Stage::draw(SpriteBatch &spriteBattch){
+    for(auto &aPlayer : players){
+        aPlayer.drawPlayer(spriteBattch);
+    }
 }
 
 // for now it is just gonna be hard coded
@@ -130,4 +154,72 @@ glm::vec4 Stage::getTilesLeftRight(const glm::vec4& pos, int direction){
 // direction > 0 means up, < 0 means down
 glm::vec4 Stage::getTilesUpDown(const glm::vec4& pos, int direction){
     return pos + glm::vec4(0, tileHeight * direction, 0, 0);
+}
+
+void Stage::applyGravity(){
+    for(auto &aPlayer : players){
+        if(!aPlayer.onTile){
+            aPlayer.setVY(aPlayer.getVY() - myPhysic.gravity);
+        }
+    }
+}
+
+void Stage::tileCollisionChecking(){
+    glm::vec4 playerPos;
+    glm::vec4 tilePos;
+    for(auto & aPlayer : players){
+        if(aPlayer.getVY() < 0){
+            playerPos.x = aPlayer.getX();
+            playerPos.y = aPlayer.getY();
+
+            playerPos.z = aPlayer.getCurr()->getWidth();
+            playerPos.w = aPlayer.getCurr()->getHeight();
+
+            for(auto& aTile : firstLevel){
+                if(aTile.type != BLANK){
+                    tilePos = aTile.getPos();
+                    if(myPhysic.checkTileCollisions(playerPos, tilePos)){
+                        aPlayer.onTile = true;
+                        aPlayer.setY(tilePos.y + tilePos.w);
+                        aPlayer.setVY(0.0f);
+                        return;
+                    }
+                }
+            }
+            for(auto& aTile : secondLevel){
+                if(aTile.type != BLANK){
+                    tilePos = aTile.getPos();
+                    if(myPhysic.checkTileCollisions(playerPos, tilePos)){
+                        aPlayer.onTile = true;
+                        aPlayer.setY(tilePos.y + tilePos.w);
+                        aPlayer.setVY(0.0f);
+                        return;
+                    }
+                }
+            }
+            for(auto& aTile : thirdLevel){
+                if(aTile.type != BLANK){
+                    tilePos = aTile.getPos();
+                    if(myPhysic.checkTileCollisions(playerPos, tilePos)){
+                        aPlayer.onTile = true;
+                        aPlayer.setY(tilePos.y + tilePos.w);
+                        aPlayer.setVY(0.0f);
+                        return;
+                    }
+                }
+            }
+            for(auto& aTile : fourthLevel){
+                if(aTile.type != BLANK){
+                    tilePos = aTile.getPos();
+                    if(myPhysic.checkTileCollisions(playerPos, tilePos)){
+                        aPlayer.onTile = true;
+                        aPlayer.setY(tilePos.y + tilePos.w);
+                        aPlayer.setVY(0.0f);
+                        return;
+                    }
+                }
+            }
+        }
+        aPlayer.onTile = false;
+    }
 }

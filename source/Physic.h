@@ -1,13 +1,16 @@
+#pragma once
+#include <glm/glm.hpp>
+
 class Physic{
 public:
-    Physic();
-    ~Physic();
+    bool checkCollisions(const glm::vec4& firstItem, const glm::vec4& secondItem);
 
-    static float calculateSpeed(float currentSpeed, float force, float mass);
+    //this will only be used on player and tile collision detection
+    bool checkTileCollisions(const glm::vec4& playerPos, const glm::vec4 & tilePos);
 
+// speed can be positive and negative, friction alwasy gonna be positive
+    void applyFriction(float &speed, float friction);
 
-private:
-   const float G = 9.8f;
-   float friction;
+    const float gravity = 0.2;
 
 };

@@ -56,7 +56,7 @@ void MainGame::gameLoop(){
         static int frameCounter = 0;
         frameCounter ++;
         if(frameCounter == 10){
-            //std::cout << fps << std::endl;
+            std::cout << fps << std::endl;
             frameCounter = 0;
         }
         drawGame();
@@ -71,7 +71,7 @@ void MainGame::gameLoop(){
 void MainGame::processInput(){
     SDL_Event evnt;
 
-    const float CAMERA_SPEED = 2.0f;
+    // TODO ADD SECOND PLAYER
 
     while(SDL_PollEvent(&evnt)){
         switch(evnt.type){
@@ -82,18 +82,16 @@ void MainGame::processInput(){
             //std::cout<<evnt.motion.x << " " << evnt.motion.y << std::endl;
             break;
         case SDL_KEYDOWN:
-            inputManager_.pressKey(evnt.key.keysym.sym);
+            myStage.players[0].playerInputManager.pressKey(evnt.key.keysym.sym);
+        //    myStage.players_[1].playerInputManager_.pressKey(evnt.key.keysym.sym);
             break;
         case SDL_KEYUP:
-            inputManager_.releaseKey(evnt.key.keysym.sym);
+            myStage.players[0].playerInputManager.releaseKey(evnt.key.keysym.sym);
+         //   myStage.players_[1].playerInputManager_.releaseKey(evnt.key.keysym.sym);
             break;
         }
     }
-
-    if(inputManager_.isKeyPressed(SDLK_s)){
-        camera.setPosition(camera.getPosition() + glm::vec2(0.0f, CAMERA_SPEED));
-    }
-    camera.update();
+    myStage.update();
 }
 
 void MainGame::drawGame(){
@@ -124,19 +122,13 @@ void MainGame::drawGame(){
     myStage.setStage(spriteBatch_);
 
     spriteBatch_.begin();
-    glm::vec4 pos(1000, 0, 50, 50);
-    glm::vec4 uv(0, 0, 1, 1);
-    glm::vec4 pos2(100, 220, 500, 500);
-    glm::vec4 uv2(0, 0, 1, 1);
-    static GLTexture texture2 = mainManager.getTexture("../YOLO/texture/JJU/PNG/HappyCloud.png");
-    static GLTexture texture = mainManager.getTexture("../YOLO/texture/JJU/PNG/CharacterRight_Standing.png");
     Color color;
     color.r = 255;
     color.b = 255;
     color.g = 255;
     color.a = 255;
-    spriteBatch_.draw(pos, uv, texture.id, 0.0f, color);
-    //spriteBatch_.draw(pos2, uv2, texture2.id, 0.0f, color);
+    //myStage.players[0].drawPlayer(spriteBatch_);
+    myStage.draw(spriteBatch_);
 
     spriteBatch_.end();
 
