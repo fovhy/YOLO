@@ -33,7 +33,6 @@ void Character::drawAnimation(const glm::vec2 &pos, int direction,
 }
 
 void Character::drawfall(const glm::vec2& pos, int direction,SpriteBatch& spriteBatch){
-    spriteBatch.begin();
     Color solidColor;
     solidColor.r = 255;
     solidColor.g = 255;
@@ -56,7 +55,6 @@ void Character::drawfall(const glm::vec2& pos, int direction,SpriteBatch& sprite
 }
 
 void Character::drawAttack(const glm::vec2& pos, int direction,SpriteBatch& spriteBatch){
-    spriteBatch.begin();
     if(attackDone){
         attackDone = false;
     }
@@ -82,7 +80,6 @@ void Character::drawAttack(const glm::vec2& pos, int direction,SpriteBatch& spri
 }
 
 void Character::drawIdle(const glm::vec2& pos, int direction,SpriteBatch& spriteBatch){
-    spriteBatch.begin();
     Color solidColor;
     solidColor.r = 255;
     solidColor.g = 255;
@@ -105,7 +102,6 @@ void Character::drawIdle(const glm::vec2& pos, int direction,SpriteBatch& sprite
 
 void Character::drawJump(const glm::vec2& pos, int direction,SpriteBatch& spriteBatch){
 
-    spriteBatch.begin();
     Color solidColor;
     solidColor.r = 255;
     solidColor.g = 255;
@@ -129,7 +125,6 @@ void Character::drawJump(const glm::vec2& pos, int direction,SpriteBatch& sprite
 void Character::drawJumpAttack(const glm::vec2& pos, int direction,SpriteBatch& spriteBatch){
     if(jumpAttackDone)
         jumpAttackDone = false;
-    spriteBatch.begin();
     Color solidColor;
     solidColor.r = 255;
     solidColor.g = 255;
@@ -152,7 +147,6 @@ void Character::drawJumpAttack(const glm::vec2& pos, int direction,SpriteBatch& 
 }
 
 void Character::drawRun(const glm::vec2& pos, int direction,SpriteBatch& spriteBatch){
-    spriteBatch.begin();
     Color solidColor;
     solidColor.r = 255;
     solidColor.g = 255;
@@ -175,7 +169,6 @@ void Character::drawRun(const glm::vec2& pos, int direction,SpriteBatch& spriteB
 
 
 void Character::drawStunned(const glm::vec2& pos, int direction,SpriteBatch& spriteBatch){
-    spriteBatch.begin();
     if(stunDone){
         stunDone = false;
     }

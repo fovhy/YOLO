@@ -56,7 +56,6 @@ void Samurai::spawnSpecialAttackBox(){
 
 void Samurai::drawSpecialAttack(const glm::vec2& pos, int direction,SpriteBatch& spriteBatch){
 
-    spriteBatch.begin();
     Color solidColor;
     solidColor.r = 255;
     solidColor.g = 255;

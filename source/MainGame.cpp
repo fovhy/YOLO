@@ -82,12 +82,12 @@ void MainGame::processInput(){
             //std::cout<<evnt.motion.x << " " << evnt.motion.y << std::endl;
             break;
         case SDL_KEYDOWN:
+            myStage.players[1].playerInputManager.pressKey(evnt.key.keysym.sym);
             myStage.players[0].playerInputManager.pressKey(evnt.key.keysym.sym);
-        //    myStage.players_[1].playerInputManager_.pressKey(evnt.key.keysym.sym);
             break;
         case SDL_KEYUP:
+            myStage.players[1].playerInputManager.releaseKey(evnt.key.keysym.sym);
             myStage.players[0].playerInputManager.releaseKey(evnt.key.keysym.sym);
-         //   myStage.players_[1].playerInputManager_.releaseKey(evnt.key.keysym.sym);
             break;
         }
     }

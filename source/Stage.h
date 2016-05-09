@@ -23,10 +23,10 @@ public:
     ~Stage(){}
     void init();
     void setStage(SpriteBatch &);
-    static const int PLAYER_NUMBERS= 1;
+    static const int PLAYER_NUMBERS= 2;
     std::vector<Player> players;
     Physic myPhysic;
-    void tileCollisionChecking();
+    void tileCollisionChecking(Player&);
     void update();
     void processInput();
     void draw(SpriteBatch& spriteBattch);

@@ -17,6 +17,10 @@ void Stage::init(){
     players[0].setCurrentCharacters(players[0].characters[0]);
     players[0].setPlayerType(PLAYER_ONE);
     players[0].setPayerState(STANDING);
+    players[1].init(glm::vec2(1000, 200));
+    players[1].setCurrentCharacters(players[0].characters[0]);
+    players[1].setPlayerType(PLAYER_TWO);
+    players[1].setPayerState(STANDING);
     //TDOO ADD PLAYER 2
     //players_[1].init();
     //players_[1].setCurrentCharacters(& players_[1].characters[1]);
@@ -28,14 +32,25 @@ void Stage::init(){
 }
 
 void Stage::update(){
-    for(auto &aPlayer : players){
+    /*for(auto &aPlayer : players){
         aPlayer.processInput();
         if(aPlayer.onTile){
             applyTileEffect(aPlayer, findTile(aPlayer));
         }
         aPlayer.update();
+    }*/
+    players[0].processInput();
+    players[1].processInput();
+    if(players[0].onTile){
+        applyTileEffect(players[0], findTile(players[0]));
     }
-    tileCollisionChecking();
+    players[0].update();
+    if(players[1].onTile){
+        applyTileEffect(players[1], findTile(players[1]));
+    }
+    players[1].update();
+    tileCollisionChecking(players[0]);
+    tileCollisionChecking(players[1]);
     applyGravity();
 }
 
@@ -52,7 +67,6 @@ void Stage::setStage(SpriteBatch& spriteBatch){
     solidColor.g = 255;
     solidColor.b = 255;
     solidColor.a = 255;
-    spriteBatch.begin();
     glm::vec4 wholeScreen(0, -400, 1200, 800);
     glm::vec4 uv(0, 0, 1, 1);
     spriteBatch.draw(wholeScreen,uv, backGroundTexture.id, 0.0f, solidColor);
@@ -232,10 +246,9 @@ void Stage::applyTileEffect(Player& aPlayer, const tile& aTile){
 }
 
 
-void Stage::tileCollisionChecking(){
+void Stage::tileCollisionChecking(Player& aPlayer){
     glm::vec4 playerPos;
     glm::vec4 tilePos;
-    for(auto & aPlayer : players){
         if(aPlayer.getVY() <= 0){
             playerPos.x = aPlayer.getX();
             playerPos.y = aPlayer.getY();
@@ -290,5 +303,4 @@ void Stage::tileCollisionChecking(){
         }
         aPlayer.onTile = false;
         //std::cout<<"not on tile" << std::endl;
-    }
 }
