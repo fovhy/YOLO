@@ -1,4 +1,5 @@
 #include "Physic.h"
+#include <iostream>
 
 bool Physic::checkCollisions(const glm::vec4 &firstItem, const glm::vec4 &secondItem){
     bool collisionX = firstItem.x + firstItem.z > secondItem.x &&
@@ -23,8 +24,7 @@ void Physic::applyFriction(float& speed, float friction){
             speed -= friction;
         }else
             speed = 0;
-    }
-    if(speed < 0){
+    }else{
         if(speed < -friction){
             speed += friction;
         }else

@@ -31,6 +31,23 @@ struct tile{
         return glm::vec4(x, y, width, height);
     }
 
+    float getFriction(){
+        switch (type) {
+        case GRASS:
+            return 0.05;
+            break;
+        case ICE:
+            return 0.01;
+            break;
+        case DIRT:
+            return 0.1;
+            break;
+        case POISON:
+            return 0.4;
+            break;
+        }
+    }
+
     tilesType type;
 
 };

@@ -1,10 +1,27 @@
 #pragma once
 #include "Character.h"
 #include "inputManager.h"
+#include "bald.h"
+#include "maiden.h"
+#include "ninja.h"
+#include "samurai.h"
+
+enum currentCharacterType{
+    MAIDEN,
+    SAMURAI,
+    BALD,
+    NINJA,
+    POOR
+};
+
 enum PlayerStates{
     STANDING,
     TAKE_DAMAGE,
+    ATTACKING,
+    JUMP_ATTACKING,
+    SPECIAL_ATTACKING,
     JUMPING,
+    RUNNING,
     FALLING
 };
 
@@ -34,13 +51,18 @@ public:
         playerType_ = aType;
     }
 
-    void setFacing(int facing){
-        this->facing = facing;
+    void setDirection(int direction){
+        this->direction = direction;
     }
 
     void setPayerState(PlayerStates aState){
         currentState_ = aState;
     }
+
+    void checkDeath();
+    void respawn();
+    void youDead();
+
     void setVX(float vx){velocityX_ = vx;}
     void setVY(float vy){velocityY_ = vy;}
 
@@ -54,20 +76,33 @@ public:
     float getVY(){return velocityY_;}
     Character* getCurr(){ return currentCharacter_;}
 
+    void drawHP(SpriteBatch& SpriteBatch);
+    void drawAvatar(SpriteBatch& SpriteBatch);
+
     inputManager playerInputManager;
-    std::vector<Character> characters;
+    std::vector<Character*> characters;
     bool onTile = false;
     bool inAir = true;
     bool isDead = false;
+    bool takingDamage = false;
+    float speedChange = 0.25;
+    int hp = 5;
+    float damageTimer = 0;
+    float timer = 0;
+    float ticking = 1.0/60.0;
+    currentCharacterType characterType = BALD;
 private:
+    ResourceManager playerManager;
+    std::vector<GLTexture> heart;
+    std::vector<GLTexture> Avatar;
     void limitSpeed(float& speed);
-    const float MAX_VELOCITY = 10;
+    const float MAX_VELOCITY = 7;
 
     PlayerType playerType_;
     PlayerStates currentState_;
 
     const int CHARACTER_NUMBERS = 4;
-    int facing = 0;
+    int direction = 0;
 
     float accelerationX_ = 0;
     float accelerationY_ = 0;

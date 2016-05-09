@@ -56,7 +56,7 @@ void MainGame::gameLoop(){
         static int frameCounter = 0;
         frameCounter ++;
         if(frameCounter == 10){
-            std::cout << fps << std::endl;
+            //std::cout << fps << std::endl;
             frameCounter = 0;
         }
         drawGame();

@@ -13,8 +13,8 @@ void Stage::init(){
     backGroundTexture = stageManager.getTexture("../YOLO/texture/JJU/PNG/Backgrounds/background.png");
 
     players.resize(PLAYER_NUMBERS);
-    players[0].init(glm::vec2(0, 100));
-    players[0].setCurrentCharacters(&players[0].characters[0]);
+    players[0].init(glm::vec2(0, 200));
+    players[0].setCurrentCharacters(players[0].characters[0]);
     players[0].setPlayerType(PLAYER_ONE);
     players[0].setPayerState(STANDING);
     //TDOO ADD PLAYER 2
@@ -30,6 +30,9 @@ void Stage::init(){
 void Stage::update(){
     for(auto &aPlayer : players){
         aPlayer.processInput();
+        if(aPlayer.onTile){
+            applyTileEffect(aPlayer, findTile(aPlayer));
+        }
         aPlayer.update();
     }
     tileCollisionChecking();
@@ -53,7 +56,7 @@ void Stage::setStage(SpriteBatch& spriteBatch){
     glm::vec4 wholeScreen(0, -400, 1200, 800);
     glm::vec4 uv(0, 0, 1, 1);
     spriteBatch.draw(wholeScreen,uv, backGroundTexture.id, 0.0f, solidColor);
-    glm::vec4 firstLevelPos(0, -200, tileWidth, tileHeight);
+    glm::vec4 firstLevelPos(0, firstLevelHeight, tileWidth, tileHeight);
     firstLevel[0].setTile(firstLevelPos, POISON);
     firstLevel[1].setTile(getTilesLeftRight(firstLevelPos, 1), POISON);
     firstLevel[2].setTile(getTilesLeftRight(firstLevelPos, 2), POISON);
@@ -68,9 +71,9 @@ void Stage::setStage(SpriteBatch& spriteBatch){
     firstLevel[10].setTile(getTilesLeftRight(firstLevelPos, 10), POISON);
     firstLevel[11].setTile(getTilesLeftRight(firstLevelPos, 11), POISON);
 
-    glm::vec4 secondLevelPos(0, -100, tileWidth, tileHeight);
-    secondLevel[0].setTile(secondLevelPos, ICE);
-    secondLevel[1].setTile(getTilesLeftRight(secondLevelPos, 1), ICE);
+    glm::vec4 secondLevelPos(0, secondLevelHeight, tileWidth, tileHeight);
+    secondLevel[0].setTile(secondLevelPos, BLANK);
+    secondLevel[1].setTile(getTilesLeftRight(secondLevelPos, 1), BLANK);
     secondLevel[2].setTile(getTilesLeftRight(secondLevelPos, 2), BLANK);
     secondLevel[3].setTile(getTilesLeftRight(secondLevelPos, 3), BLANK);
     secondLevel[4].setTile(getTilesLeftRight(secondLevelPos, 4), ICE);
@@ -80,25 +83,25 @@ void Stage::setStage(SpriteBatch& spriteBatch){
     secondLevel[7].setTile(getTilesLeftRight(secondLevelPos, 7), ICE);
     secondLevel[8].setTile(getTilesLeftRight(secondLevelPos, 8), BLANK);
     secondLevel[9].setTile(getTilesLeftRight(secondLevelPos, 9), BLANK);
-    secondLevel[10].setTile(getTilesLeftRight(secondLevelPos, 10), ICE);
-    secondLevel[11].setTile(getTilesLeftRight(secondLevelPos, 11), ICE);
+    secondLevel[10].setTile(getTilesLeftRight(secondLevelPos, 10), BLANK);
+    secondLevel[11].setTile(getTilesLeftRight(secondLevelPos, 11), BLANK);
 
-    glm::vec4 thirdLevelPos(0, 0, tileWidth, tileHeight);
+    glm::vec4 thirdLevelPos(0, thirdLevelHeight, tileWidth, tileHeight);
     thirdLevel[0].setTile(thirdLevelPos, BLANK);
-    thirdLevel[1].setTile(getTilesLeftRight(thirdLevelPos, 1), BLANK);
-    thirdLevel[2].setTile(getTilesLeftRight(thirdLevelPos, 2), BLANK);
+    thirdLevel[1].setTile(getTilesLeftRight(thirdLevelPos, 1), DIRT);
+    thirdLevel[2].setTile(getTilesLeftRight(thirdLevelPos, 2), DIRT);
     thirdLevel[3].setTile(getTilesLeftRight(thirdLevelPos, 3), DIRT);
     thirdLevel[4].setTile(getTilesLeftRight(thirdLevelPos, 4), DIRT);
     thirdLevel[5].setTile(getTilesLeftRight(thirdLevelPos, 5), BLANK);
 
     thirdLevel[6].setTile(getTilesLeftRight(thirdLevelPos, 6), BLANK);
-    thirdLevel[7].setTile(getTilesLeftRight(thirdLevelPos, 7), BLANK);
+    thirdLevel[7].setTile(getTilesLeftRight(thirdLevelPos, 7), DIRT);
     thirdLevel[8].setTile(getTilesLeftRight(thirdLevelPos, 8), DIRT);
     thirdLevel[9].setTile(getTilesLeftRight(thirdLevelPos, 9), DIRT);
-    thirdLevel[10].setTile(getTilesLeftRight(thirdLevelPos, 10), BLANK);
+    thirdLevel[10].setTile(getTilesLeftRight(thirdLevelPos, 10), DIRT);
     thirdLevel[11].setTile(getTilesLeftRight(thirdLevelPos, 11), BLANK);
 
-    glm::vec4 fourthLevelPos(0, 100, tileWidth, tileHeight);
+    glm::vec4 fourthLevelPos(0, fourthLevelHeight, tileWidth, tileHeight);
     fourthLevel[0].setTile(fourthLevelPos, ICE);
     fourthLevel[1].setTile(getTilesLeftRight(fourthLevelPos, 1), ICE);
     fourthLevel[2].setTile(getTilesLeftRight(fourthLevelPos, 2), BLANK);
@@ -164,11 +167,76 @@ void Stage::applyGravity(){
     }
 }
 
+tile Stage::findTile(Player& aPlayer){
+    if(!aPlayer.onTile){
+        printError("Not on tile while finding tile");
+        exit(3);
+    }
+    float playerLeft = aPlayer.getX();
+    float playerRight = aPlayer.getX() + aPlayer.getCurr()->getWidth();
+    float midPoint = (playerLeft + playerRight) / 2.0;
+    if(std::abs(aPlayer.getY() - firstLevelHeight - tileHeight)  < 10){
+        for(auto &aTile : firstLevel){
+            if(aTile.type != BLANK)
+                if(midPoint > aTile.x && midPoint < aTile.x + aTile.width){
+                    return aTile;
+                }
+        }
+    }
+    if(std::abs(aPlayer.getY() - secondLevelHeight - tileHeight) < 10){
+        for(auto &aTile : secondLevel){
+            if(aTile.type != BLANK)
+                if(midPoint > aTile.x && midPoint < aTile.x + aTile.width){
+                    return aTile;
+                }
+        }
+    }
+    if(std::abs(aPlayer.getY() - thirdLevelHeight - tileHeight) < 10){
+        for(auto &aTile : thirdLevel){
+            if(aTile.type != BLANK)
+                if(midPoint > aTile.x && midPoint < aTile.x + aTile.width){
+                    return aTile;
+                }
+        }
+    }
+    if(std::abs(aPlayer.getY() - fourthLevelHeight - tileHeight) < 10){
+        for(auto &aTile : fourthLevel){
+            if(aTile.type != BLANK)
+                if(midPoint > aTile.x && midPoint < aTile.x + aTile.width){
+                    return aTile;
+                }
+        }
+    }
+}
+
+void Stage::applyTileEffect(Player& aPlayer, const tile& aTile){
+    float speedX = aPlayer.getVX();
+    switch (aTile.type) {
+    case GRASS:
+        myPhysic.applyFriction(speedX, 0.12);
+        aPlayer.setVX(speedX);
+        break;
+    case ICE:
+        myPhysic.applyFriction(speedX, 0.04);
+        aPlayer.setVX(speedX);
+        break;
+    case DIRT:
+        myPhysic.applyFriction(speedX, 0.14);
+        aPlayer.setVX(speedX);
+        break;
+    case POISON:
+        aPlayer.setVX(speedX);
+        aPlayer.setVX(0.05);
+        break;
+    }
+}
+
+
 void Stage::tileCollisionChecking(){
     glm::vec4 playerPos;
     glm::vec4 tilePos;
     for(auto & aPlayer : players){
-        if(aPlayer.getVY() < 0){
+        if(aPlayer.getVY() <= 0){
             playerPos.x = aPlayer.getX();
             playerPos.y = aPlayer.getY();
 
@@ -180,7 +248,7 @@ void Stage::tileCollisionChecking(){
                     tilePos = aTile.getPos();
                     if(myPhysic.checkTileCollisions(playerPos, tilePos)){
                         aPlayer.onTile = true;
-                        aPlayer.setY(tilePos.y + tilePos.w);
+                        aPlayer.setY(tilePos.y + tilePos.w / 1.3);
                         aPlayer.setVY(0.0f);
                         return;
                     }
@@ -191,7 +259,7 @@ void Stage::tileCollisionChecking(){
                     tilePos = aTile.getPos();
                     if(myPhysic.checkTileCollisions(playerPos, tilePos)){
                         aPlayer.onTile = true;
-                        aPlayer.setY(tilePos.y + tilePos.w);
+                        aPlayer.setY(tilePos.y + tilePos.w / 1.3);
                         aPlayer.setVY(0.0f);
                         return;
                     }
@@ -202,7 +270,7 @@ void Stage::tileCollisionChecking(){
                     tilePos = aTile.getPos();
                     if(myPhysic.checkTileCollisions(playerPos, tilePos)){
                         aPlayer.onTile = true;
-                        aPlayer.setY(tilePos.y + tilePos.w);
+                        aPlayer.setY(tilePos.y + tilePos.w / 1.3);
                         aPlayer.setVY(0.0f);
                         return;
                     }
@@ -213,7 +281,7 @@ void Stage::tileCollisionChecking(){
                     tilePos = aTile.getPos();
                     if(myPhysic.checkTileCollisions(playerPos, tilePos)){
                         aPlayer.onTile = true;
-                        aPlayer.setY(tilePos.y + tilePos.w);
+                        aPlayer.setY(tilePos.y + tilePos.w/1.3);
                         aPlayer.setVY(0.0f);
                         return;
                     }
@@ -221,5 +289,6 @@ void Stage::tileCollisionChecking(){
             }
         }
         aPlayer.onTile = false;
+        //std::cout<<"not on tile" << std::endl;
     }
 }
