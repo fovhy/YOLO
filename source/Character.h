@@ -31,14 +31,20 @@ public:
     float getWidth(){ return characterWidth_ ;}
     float getHeight(){ return characterHeight_;}
 
-    virtual void spawnAttackBox() = 0;
-    virtual void spawnSpecialAttackBox() = 0;
+    void spawnAttackBox(const glm::vec2& pos, int direction);
+    virtual void spawnSpecialAttackBox(const glm::vec2& pos, int direction) = 0;
     bool attackDone = true;
     bool jumpAttackDone = true;
     bool specialAttackDone = true;
     bool stunDone = true;
     glm::vec4 attackBox;
     glm::vec4 specialAttackBox;
+    float attackWidth = 0;
+    float attackHeight = 0;
+
+    float specialAttackWidth = 0;
+    float specialAttackHeight = 0;
+
 protected:
     void drawAttack(const glm::vec2& pos, int direction,SpriteBatch& spriteBatch);
     void drawIdle(const glm::vec2& pos, int direction,SpriteBatch& spriteBatch);

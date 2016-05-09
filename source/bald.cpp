@@ -43,12 +43,13 @@ void Bald::init(){
     stunned[1] = characterManager_.getTexture("../YOLO/texture/bald/x_1.png");
     stunnedC = 0.05;
 
-}
-void Bald::spawnAttackBox(){
+    attackWidth = 40;
+    attackHeight = 100;
+
 
 }
 
-void Bald::spawnSpecialAttackBox(){
+void Bald::spawnSpecialAttackBox(const glm::vec2& pos, int direction){
 
 }
 

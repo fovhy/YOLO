@@ -32,8 +32,10 @@ public:
     void draw(SpriteBatch& spriteBattch);
     tile findTile(Player& aPlayer);
     void applyTileEffect(Player& aPlayer, const tile& aTile);
-
     void applyGravity();
+
+    void checkAttack();
+
 private:
     float firstLevelHeight = -200;
     float secondLevelHeight = -100;

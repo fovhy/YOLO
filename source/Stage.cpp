@@ -31,6 +31,31 @@ void Stage::init(){
     fourthLevel.resize(12);
 }
 
+void Stage::checkAttack(){
+    if(!players[0].currentCharacter_->attackDone){
+ //       std::cout << " attack box x " << players[0].currentCharacter_->attackBox.x << std::endl;
+  //      std::cout << " attack box y " << players[0].currentCharacter_->attackBox.y << std::endl;
+   //j     std::cout << " attack box w " << players[0].currentCharacter_->attackBox.z << std::endl;
+     //j   std::cout << " attack box h " << players[0].currentCharacter_->attackBox.w << std::endl;
+
+
+       //j std::cout << " player 2 box x " << players[1].getMatrix().x << std::endl;
+      //j  std::cout << " player 2 box y " << players[1].getMatrix().y << std::endl;
+      //j  std::cout << " player 2 box h " << players[1].getMatrix().z << std::endl;
+      //j  std::cout << " player 2 box w " << players[1].getMatrix().w << std::endl;
+
+        if(myPhysic.checkCollisions(players[0].currentCharacter_->attackBox, players[1].getMatrix())){
+            players[1].takingDamage = true;
+            std::cout << " taking damage " << std::endl;
+        }
+    }
+        if(!players[1].currentCharacter_->attackDone){
+            if(myPhysic.checkCollisions(players[1].currentCharacter_->attackBox, players[0].getMatrix())){
+                players[0].takingDamage = true;
+            }
+        }
+    }
+
 void Stage::update(){
     /*for(auto &aPlayer : players){
         aPlayer.processInput();
@@ -52,6 +77,7 @@ void Stage::update(){
     tileCollisionChecking(players[0]);
     tileCollisionChecking(players[1]);
     applyGravity();
+    checkAttack();
 }
 
 void Stage::draw(SpriteBatch &spriteBattch){
@@ -249,58 +275,58 @@ void Stage::applyTileEffect(Player& aPlayer, const tile& aTile){
 void Stage::tileCollisionChecking(Player& aPlayer){
     glm::vec4 playerPos;
     glm::vec4 tilePos;
-        if(aPlayer.getVY() <= 0){
-            playerPos.x = aPlayer.getX();
-            playerPos.y = aPlayer.getY();
+    if(aPlayer.getVY() <= 0){
+        playerPos.x = aPlayer.getX();
+        playerPos.y = aPlayer.getY();
 
-            playerPos.z = aPlayer.getCurr()->getWidth();
-            playerPos.w = aPlayer.getCurr()->getHeight();
+        playerPos.z = aPlayer.getCurr()->getWidth();
+        playerPos.w = aPlayer.getCurr()->getHeight();
 
-            for(auto& aTile : firstLevel){
-                if(aTile.type != BLANK){
-                    tilePos = aTile.getPos();
-                    if(myPhysic.checkTileCollisions(playerPos, tilePos)){
-                        aPlayer.onTile = true;
-                        aPlayer.setY(tilePos.y + tilePos.w / 1.3);
-                        aPlayer.setVY(0.0f);
-                        return;
-                    }
-                }
-            }
-            for(auto& aTile : secondLevel){
-                if(aTile.type != BLANK){
-                    tilePos = aTile.getPos();
-                    if(myPhysic.checkTileCollisions(playerPos, tilePos)){
-                        aPlayer.onTile = true;
-                        aPlayer.setY(tilePos.y + tilePos.w / 1.3);
-                        aPlayer.setVY(0.0f);
-                        return;
-                    }
-                }
-            }
-            for(auto& aTile : thirdLevel){
-                if(aTile.type != BLANK){
-                    tilePos = aTile.getPos();
-                    if(myPhysic.checkTileCollisions(playerPos, tilePos)){
-                        aPlayer.onTile = true;
-                        aPlayer.setY(tilePos.y + tilePos.w / 1.3);
-                        aPlayer.setVY(0.0f);
-                        return;
-                    }
-                }
-            }
-            for(auto& aTile : fourthLevel){
-                if(aTile.type != BLANK){
-                    tilePos = aTile.getPos();
-                    if(myPhysic.checkTileCollisions(playerPos, tilePos)){
-                        aPlayer.onTile = true;
-                        aPlayer.setY(tilePos.y + tilePos.w/1.3);
-                        aPlayer.setVY(0.0f);
-                        return;
-                    }
+        for(auto& aTile : firstLevel){
+            if(aTile.type != BLANK){
+                tilePos = aTile.getPos();
+                if(myPhysic.checkTileCollisions(playerPos, tilePos)){
+                    aPlayer.onTile = true;
+                    aPlayer.setY(tilePos.y + tilePos.w / 1.3);
+                    aPlayer.setVY(0.0f);
+                    return;
                 }
             }
         }
-        aPlayer.onTile = false;
-        //std::cout<<"not on tile" << std::endl;
+        for(auto& aTile : secondLevel){
+            if(aTile.type != BLANK){
+                tilePos = aTile.getPos();
+                if(myPhysic.checkTileCollisions(playerPos, tilePos)){
+                    aPlayer.onTile = true;
+                    aPlayer.setY(tilePos.y + tilePos.w / 1.3);
+                    aPlayer.setVY(0.0f);
+                    return;
+                }
+            }
+        }
+        for(auto& aTile : thirdLevel){
+            if(aTile.type != BLANK){
+                tilePos = aTile.getPos();
+                if(myPhysic.checkTileCollisions(playerPos, tilePos)){
+                    aPlayer.onTile = true;
+                    aPlayer.setY(tilePos.y + tilePos.w / 1.3);
+                    aPlayer.setVY(0.0f);
+                    return;
+                }
+            }
+        }
+        for(auto& aTile : fourthLevel){
+            if(aTile.type != BLANK){
+                tilePos = aTile.getPos();
+                if(myPhysic.checkTileCollisions(playerPos, tilePos)){
+                    aPlayer.onTile = true;
+                    aPlayer.setY(tilePos.y + tilePos.w/1.3);
+                    aPlayer.setVY(0.0f);
+                    return;
+                }
+            }
+        }
+    }
+    aPlayer.onTile = false;
+    //std::cout<<"not on tile" << std::endl;
 }

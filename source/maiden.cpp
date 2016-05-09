@@ -43,12 +43,12 @@ void Maiden::init(){
     stunned[0] = characterManager_.getTexture("../YOLO/texture/maiden/x_1.png");
     stunnedC = 0.01;
 
-}
-void Maiden::spawnAttackBox(){
+    attackWidth = 100;
+    attackHeight = 40;
 
 }
 
-void Maiden::spawnSpecialAttackBox(){
+void Maiden::spawnSpecialAttackBox(const glm::vec2& pos, int direction){
 
 }
 

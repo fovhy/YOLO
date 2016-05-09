@@ -63,6 +63,11 @@ public:
     void respawn();
     void youDead();
 
+    glm::vec4 getMatrix(){
+        return glm::vec4(playerPosition_.x, playerPosition_.y,
+                         currentCharacter_->getWidth(), currentCharacter_->getHeight());
+    }
+
     void setVX(float vx){velocityX_ = vx;}
     void setVY(float vy){velocityY_ = vy;}
 
@@ -87,10 +92,13 @@ public:
     bool takingDamage = false;
     float speedChange = 0.25;
     int hp = 5;
+    const float damageTimerMax = 2;
     float damageTimer = 0;
+    bool canTakeDamage = true;
     float timer = 0;
     float ticking = 1.0/60.0;
     currentCharacterType characterType = BALD;
+    Character* currentCharacter_ = nullptr;
 private:
     ResourceManager playerManager;
     std::vector<GLTexture> heart;
@@ -111,6 +119,5 @@ private:
 
 
 
-    Character* currentCharacter_ = nullptr;
     glm::vec2 playerPosition_ = glm::vec2(0.0f);
 };

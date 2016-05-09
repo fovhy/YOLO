@@ -374,10 +374,27 @@ void Player::processInput(){
         if(isDead){
             youDead();
         }
-        if(!currentCharacter_->stunDone){
-            currentState_ = TAKE_DAMAGE;
+
+        if(!currentCharacter_->attackDone){
+            glm::vec2 midpoint = glm::vec2(playerPosition_.x + currentCharacter_->getWidth()/2,
+                                           playerPosition_.y);
+            currentCharacter_->spawnAttackBox(midpoint, direction);
         }else{
             takingDamage = false;
+            currentState_ = STANDING;
+        }
+        if(takingDamage){
+            currentState_ = TAKE_DAMAGE;
+            damageTimer += 0.01;
+            if(damageTimer > 1){
+                damageTimer = 0;
+                canTakeDamage = true;
+            }
+            if(canTakeDamage){
+                hp -=  1;
+                canTakeDamage = false;
+            }
+        }else{
             if(onTile && abs(velocityY_ ) < 0.1){
                 if( std::abs(velocityX_ )< 0.3 && currentCharacter_->attackDone){
                     currentState_ = STANDING;

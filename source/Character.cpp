@@ -121,6 +121,13 @@ void Character::drawJump(const glm::vec2& pos, int direction,SpriteBatch& sprite
                      uv, jump[(int)jumpS].id, 1.0, solidColor);
     jumpS += jumpC;
 }
+void Character::spawnAttackBox(const glm::vec2 &pos, int direction){
+    if(direction < 0){
+        attackBox = glm::vec4(pos.x, pos.y, attackWidth, attackHeight);
+    }else{
+        attackBox = glm::vec4(pos.x , pos.y, attackWidth, attackHeight);
+    }
+}
 
 void Character::drawJumpAttack(const glm::vec2& pos, int direction,SpriteBatch& spriteBatch){
     if(jumpAttackDone)

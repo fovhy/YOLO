@@ -45,12 +45,14 @@ void Samurai::init(){
     stunned[0] = characterManager_.getTexture("../YOLO/texture/samurai/x_1.png");
     stunnedC = 0.01;
 
-}
-void Samurai::spawnAttackBox(){
+    attackWidth = 70;
+    attackHeight = 70;
 
 }
 
-void Samurai::spawnSpecialAttackBox(){
+
+
+void Samurai::spawnSpecialAttackBox(const glm::vec2& pos, int direction){
 
 }
 

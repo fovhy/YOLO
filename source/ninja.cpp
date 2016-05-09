@@ -44,14 +44,17 @@ void Ninja::init(){
     stunned[0] = characterManager_.getTexture("../YOLO/texture/ninja/x_1.png");
     stunnedC = 0.01;
 
-}
-void Ninja::spawnAttackBox(){
+    attackWidth = 40;
+    attackHeight = 100;
+
 
 }
 
-void Ninja::spawnSpecialAttackBox(){
+void Ninja::spawnSpecialAttackBox(const glm::vec2 &pos, int direction)
+{
 
 }
+
 
 void Ninja::drawSpecialAttack(const glm::vec2& pos, int direction,SpriteBatch& spriteBatch){
 
